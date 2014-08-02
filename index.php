@@ -15,25 +15,49 @@ function novo_grupo() {
    return $mysqli->insert_id;
 }
 
+//
 function associa_cliente($contanum, $grupoid) {
    global $mysqli;
-   $clientecc = $mysqli->query("SELECT * FROM ClienteCC WHERE cc = $contanum");
+   $clientecc = $mysqli->query("SELECT * FROM ClienteCC WHERE cc = '$contanum'");
    while($row = $clientecc->fetch_assoc()) {
-      echo $row['cc'] . " => " . $row['cliente'];
-      echo "<br/>";
+      $cliente = $mysqli->query("SELECT * FROM Cliente WHERE nome = '{$row['cliente']}'");
+      $cliente = $cliente->fetch_assoc();
+      if ($cliente['id_Grupo'] == NULL) {
+         $mysqli->query("UPDATE Cliente SET id_Grupo = $grupoid WHERE nome = '{$cliente['nome']}'");
+         associa_cc($cliente['nome'], $grupoid);
+      }
    }
 }
 
+function associa_cc($clientenome, $grupoid) {
+   global $mysqli;
+   $clientecc = $mysqli->query("SELECT * FROM ClienteCC WHERE cliente = '$clientenome'");
+   while($row = $clientecc->fetch_assoc()) {
+      $cc = $mysqli->query("SELECT * FROM CC WHERE num = '{$row['cc']}'");
+      $cc = $cc->fetch_assoc();
+      if ($cc['id_Grupo'] == NULL) {
+         $mysqli->query("UPDATE CC SET id_Grupo = $grupoid WHERE num = '{$cc['num']}'");
+         associa_cliente($cc['num'], $grupoid);
+      }
+   }
+}
+
+
+
+// Reinicia tabelas
 $mysqli->query("TRUNCATE Grupo");
 $mysqli->query("UPDATE CC SET id_Grupo = NULL");
 $mysqli->query("UPDATE Cliente SET id_Grupo = NULL");
 
+//
 $contas = $mysqli->query("SELECT * FROM CC");
-
 while ($conta = $contas->fetch_assoc()) {
-   if ($conta['id_Grupo'] == NULL) {
+   $c = $mysqli->query("SELECT * FROM CC WHERE num = {$conta['num']}");
+   $c = $c->fetch_assoc();
+   if ($c['id_Grupo'] == NULL) {
       $grupo = novo_grupo();
-      associa_cliente($conta['num'], 1);
+      $mysqli->query("UPDATE CC SET id_Grupo = $grupo WHERE num = {$c['num']}");
+      associa_cliente($c['num'], $grupo);
    }
 }
 
