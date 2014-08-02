@@ -30,9 +30,7 @@ CREATE TABLE `CC` (
   `id` int(11) NOT NULL,
   `num` varchar(45) NOT NULL,
   `id_Grupo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_CC_Grupo1_idx` (`id_Grupo`),
-  CONSTRAINT `fk_CC_Grupo1` FOREIGN KEY (`id_Grupo`) REFERENCES `Grupo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,9 +54,7 @@ CREATE TABLE `Cliente` (
   `id` int(11) NOT NULL,
   `nome` varchar(45) NOT NULL,
   `id_Grupo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_Cliente_Grupo_idx` (`id_Grupo`),
-  CONSTRAINT `fk_Cliente_Grupo` FOREIGN KEY (`id_Grupo`) REFERENCES `Grupo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,7 +99,7 @@ DROP TABLE IF EXISTS `Grupo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Grupo` (
-  `id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -126,4 +122,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-01 22:23:39
+-- Dump completed on 2014-08-01 22:41:17
